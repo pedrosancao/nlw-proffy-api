@@ -9,8 +9,8 @@
     "dev": "ts-node-dev --transpile-only --ignore-watch node_modules --respawn src/server.ts",
     "build": "tsc",
     "start": "node dist/src/server.js",
-    "migrate": "knex --knexfile dist/knexfile.ts migrate:latest",
-    "migrate:rollback": "knex --knexfile dist/knexfile.ts migrate:rollback"
+    "migrate": "knex --knexfile dist/knexfile.js migrate:latest",
+    "migrate:rollback": "knex --knexfile dist/knexfile.js migrate:rollback"
   },
   "devDependencies": {
     "@types/cors": "^2.8.7",
