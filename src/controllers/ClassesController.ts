@@ -1,4 +1,6 @@
 import { Request, Response } from 'express';
+import _ from 'lodash';
+
 import database from '../database/connection';
 import { ScheduleItem } from '../interfaces';
 import { convertHourToMinutes } from '../utils';
@@ -26,11 +28,12 @@ class ClassesController {
           .whereRaw('class_id = classes.id')
           .where('weekday', weekday)
           .where('time_from', '<=', minutes)
-          .where('time_to', '>=', minutes)
-          ;
+          .where('time_to', '>=', minutes);
       });
 
-    return response.json(classes);
+    return response.json(classes.map(classItem => {
+      return _.omit(classItem, ['id', 'email', 'password']);
+    }));
   }
 
   async create (request: Request, response: Response) {
@@ -39,8 +42,10 @@ class ClassesController {
     const transaction = await database.transaction();
 
     try {
+      const email = '';
+      const password = '';
       const idUsers = await transaction('users')
-        .insert({ name, avatar, whatsapp, title, bio })
+        .insert({ name, email, password, avatar, whatsapp, title, bio })
         .returning('id');
       const idClasses = await transaction('classes')
         .insert({ subject, cost, user_id: idUsers[0] })
@@ -65,7 +70,6 @@ class ClassesController {
       return response.status(400).json({ status: 'error' });
     }
   }
-
 }
 
 export default new ClassesController();
